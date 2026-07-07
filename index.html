@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文档格式转换 - 图片转PDF、PDF转图片 | 免费在线工具</title>
+    <meta name="description" content="免费在线文档格式转换工具，支持图片转PDF、PDF转图片。所有处理在浏览器本地完成，文件不上传服务器，保护您的隐私安全。">
+    <meta name="keywords" content="图片转PDF,PDF转图片,在线转换,免费工具,文档转换,格式转换">
+    <meta name="author" content="Doc Convert">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://doc-convert.pages.dev/">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="文档格式转换 - 免费在线工具">
+    <meta property="og:description" content="图片转PDF、PDF转图片，纯浏览器处理，文件不上传服务器，保护您的隐私安全。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://doc-convert.pages.dev/">
+    <meta property="og:site_name" content="文档格式转换">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="文档格式转换 - 免费在线工具">
+    <meta name="twitter:description" content="图片转PDF、PDF转图片，纯浏览器处理，文件不上传服务器。">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- pdf-lib CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+    
+    <!-- pdfjs-dist CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist/build/pdf.min.js"></script>
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "文档格式转换",
+        "url": "https://doc-convert.pages.dev/",
+        "description": "免费在线文档格式转换工具，支持图片转PDF、PDF转图片，所有处理在浏览器本地完成。",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "CNY"
+        },
+        "featureList": [
+            "图片转PDF - 支持多图合并",
+            "PDF转图片 - 每页生成PNG",
+            "纯前端处理，文件不上传服务器",
+            "拖拽排序，批量下载"
+        ]
+    }
+    </script>
+    
+    <style>
+        [x-cloak] { display: none !important; }
+        .tab-active {
+            border-bottom: 3px solid #3b82f6;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+        .drop-zone {
+            transition: all 0.3s ease;
+        }
+        .drop-zone.dragover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        .file-item {
+            transition: transform 0.2s ease;
+        }
+        .file-item:hover {
+            transform: translateY(-2px);
+        }
+        .progress-bar {
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="border-b border-gray-100 bg-white shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-6 text-center">
+            <div class="flex items-center justify-center gap-3 mb-2">
+                <svg class="w-10 h-10 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14,2 14,8 20,8"/>
+                    <path d="M12 18v-6"/>
+                    <path d="M9 15l3-3 3 3"/>
+                </svg>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800">文档格式转换</h1>
+            </div>
+            <p class="text-gray-500 text-sm md:text-base">图片转PDF、PDF转图片，纯浏览器处理，文件不上传</p>
+            <div class="mt-3 inline-flex items-center gap-1.5 bg-green-50 text-green-700 text-xs md:text-sm px-3 py-1.5 rounded-full">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                <span>所有文件处理均在浏览器本地完成，不会上传到任何服务器</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
+        <!-- Tab Navigation -->
+        <div class="flex border-b border-gray-200 mb-8">
+            <button id="tab-img2pdf" onclick="switchTab('img2pdf')" class="flex-1 py-3 px-4 text-center text-gray-500 hover:text-blue-500 transition-colors tab-active">
+                <span class="flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21,15 16,10 5,21"/>
+                    </svg>
+                    图片转PDF
+                </span>
+            </button>
+            <button id="tab-pdf2img" onclick="switchTab('pdf2img')" class="flex-1 py-3 px-4 text-center text-gray-500 hover:text-blue-500 transition-colors">
+                <span class="flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                    </svg>
+                    PDF转图片
+                </span>
+            </button>
+        </div>
+
+        <!-- 图片转PDF Section -->
+        <div id="section-img2pdf" class="tab-section">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <!-- Drop Zone -->
+                <div id="drop-zone-img" class="drop-zone border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30">
+                    <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17,8 12,3 7,8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <p class="text-gray-600 font-medium mb-1">拖拽图片到此处，或点击选择文件</p>
+                    <p class="text-gray-400 text-sm">支持 JPG、PNG 格式，可多选</p>
+                    <input type="file" id="img-input" class="hidden" accept="image/jpeg,image/png" multiple>
+                </div>
+
+                <!-- File List -->
+                <div id="img-file-list" class="mt-4 hidden">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-medium text-gray-700">已选择 <span id="img-count">0</span> 张图片（可拖拽排序）</h3>
+                        <button onclick="clearImages()" class="text-sm text-red-500 hover:text-red-700">清空全部</button>
+                    </div>
+                    <div id="img-list" class="space-y-2 max-h-80 overflow-y-auto"></div>
+                    
+                    <!-- Convert Button -->
+                    <div class="mt-6 text-center">
+                        <button id="btn-convert-pdf" onclick="convertToPdf()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium px-8 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            转换为 PDF
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div id="img-progress" class="mt-4 hidden">
+                    <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                        <span id="img-progress-text">转换中...</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="img-progress-bar" class="bg-blue-500 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF转图片 Section -->
+        <div id="section-pdf2img" class="tab-section hidden">
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <!-- Drop Zone -->
+                <div id="drop-zone-pdf" class="drop-zone border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/30">
+                    <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                    </svg>
+                    <p class="text-gray-600 font-medium mb-1">拖拽 PDF 文件到此处，或点击选择文件</p>
+                    <p class="text-gray-400 text-sm">支持 PDF 格式</p>
+                    <input type="file" id="pdf-input" class="hidden" accept="application/pdf">
+                </div>
+
+                <!-- PDF Info & Options -->
+                <div id="pdf-info" class="mt-4 hidden">
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <svg class="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                </svg>
+                                <div>
+                                    <p id="pdf-name" class="text-sm font-medium text-gray-700 truncate max-w-xs"></p>
+                                    <p id="pdf-pages" class="text-xs text-gray-500"></p>
+                                </div>
+                            </div>
+                            <button onclick="clearPdf()" class="text-sm text-red-500 hover:text-red-700">移除</button>
+                        </div>
+                    </div>
+
+                    <!-- Page Range Options -->
+                    <div class="mb-4">
+                        <label class="text-sm font-medium text-gray-700 mb-2 block">选择转换范围</label>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="page-range" value="all" checked class="text-blue-500">
+                                <span class="text-sm text-gray-600">全部页面</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="radio" name="page-range" value="custom" class="text-blue-500">
+                                <span class="text-sm text-gray-600">自定义范围</span>
+                            </label>
+                        </div>
+                        <div id="custom-range" class="mt-2 hidden">
+                            <input type="text" id="page-range-input" placeholder="例如：1-3, 5, 7-9" class="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <p class="text-xs text-gray-400 mt-1">支持格式：1-3, 5, 7-9</p>
+                        </div>
+                    </div>
+
+                    <!-- Convert Button -->
+                    <div class="text-center">
+                        <button id="btn-convert-img" onclick="convertPdfToImages()" class="bg-blue-500 hover:bg-blue-600 text-white font-medium px-8 py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            转换为图片
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Progress -->
+                <div id="pdf-progress" class="mt-4 hidden">
+                    <div class="flex items-center justify-between text-sm text-gray-600 mb-2">
+                        <span id="pdf-progress-text">转换中...</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="pdf-progress-bar" class="bg-blue-500 h-2.5 rounded-full progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-100 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 py-6 text-center">
+            <p class="text-gray-500 text-sm">&copy; 2025 文档格式转换. 保留所有权利。</p>
+            <p class="text-gray-400 text-xs mt-2">所有文件处理均在浏览器本地完成，不会上传到任何服务器，充分保护您的隐私安全。</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist/build/pdf.worker.min.js';
+
+        // ==================== Tab Switching ====================
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.remove('tab-active'));
+            
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('tab-active');
+        }
+
+        // ==================== 图片转PDF ====================
+        let imageFiles = [];
+        const dropZoneImg = document.getElementById('drop-zone-img');
+        const imgInput = document.getElementById('img-input');
+
+        // Drop zone events
+        dropZoneImg.addEventListener('click', () => imgInput.click());
+        dropZoneImg.addEventListener('dragover', (e) => { e.preventDefault(); dropZoneImg.classList.add('dragover'); });
+        dropZoneImg.addEventListener('dragleave', () => dropZoneImg.classList.remove('dragover'));
+        dropZoneImg.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZoneImg.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+            if (files.length) addImages(files);
+        });
+        imgInput.addEventListener('change', (e) => {
+            if (e.target.files.length) addImages(Array.from(e.target.files));
+            e.target.value = '';
+        });
+
+        function addImages(files) {
+            imageFiles = imageFiles.concat(files);
+            renderImageList();
+        }
+
+        function renderImageList() {
+            const list = document.getElementById('img-list');
+            const fileList = document.getElementById('img-file-list');
+            const count = document.getElementById('img-count');
+
+            if (imageFiles.length === 0) {
+                fileList.classList.add('hidden');
+                return;
+            }
+
+            fileList.classList.remove('hidden');
+            count.textContent = imageFiles.length;
+            list.innerHTML = '';
+
+            imageFiles.forEach((file, idx) => {
+                const url = URL.createObjectURL(file);
+                const item = document.createElement('div');
+                item.className = 'file-item flex items-center gap-3 bg-gray-50 rounded-lg p-2 pr-3 border border-gray-100';
+                item.draggable = true;
+                item.dataset.index = idx;
+                item.innerHTML = `
+                    <img src="${url}" class="w-12 h-12 object-cover rounded" alt="">
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm text-gray-700 truncate">${file.name}</p>
+                        <p class="text-xs text-gray-400">${(file.size / 1024).toFixed(1)} KB</p>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        ${idx > 0 ? `<button onclick="moveImage(${idx}, -1)" class="p-1 text-gray-400 hover:text-blue-500" title="上移">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18,15 12,9 6,15"/></svg>
+                        </button>` : ''}
+                        ${idx < imageFiles.length - 1 ? `<button onclick="moveImage(${idx}, 1)" class="p-1 text-gray-400 hover:text-blue-500" title="下移">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6,9 12,15 18,9"/></svg>
+                        </button>` : ''}
+                        <button onclick="removeImage(${idx})" class="p-1 text-gray-400 hover:text-red-500" title="移除">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                        </button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function moveImage(idx, dir) {
+            const newIdx = idx + dir;
+            if (newIdx < 0 || newIdx >= imageFiles.length) return;
+            [imageFiles[idx], imageFiles[newIdx]] = [imageFiles[newIdx], imageFiles[idx]];
+            renderImageList();
+        }
+
+        function removeImage(idx) {
+            imageFiles.splice(idx, 1);
+            renderImageList();
+        }
+
+        function clearImages() {
+            imageFiles = [];
+            renderImageList();
+        }
+
+        async function convertToPdf() {
+            if (imageFiles.length === 0) return;
+
+            const btn = document.getElementById('btn-convert-pdf');
+            const progress = document.getElementById('img-progress');
+            const progressBar = document.getElementById('img-progress-bar');
+            const progressText = document.getElementById('img-progress-text');
+
+            btn.disabled = true;
+            progress.classList.remove('hidden');
+            progressBar.style.width = '0%';
+            progressText.textContent = '正在转换...';
+
+            try {
+                const { PDFDocument } = PDFLib;
+                const pdfDoc = await PDFDocument.create();
+                const total = imageFiles.length;
+
+                for (let i = 0; i < total; i++) {
+                    progressText.textContent = `正在处理第 ${i + 1}/${total} 张图片...`;
+                    progressBar.style.width = `${((i) / total) * 100}%`;
+
+                    const file = imageFiles[i];
+                    let imgBytes = await file.arrayBuffer();
+                    let img;
+
+                    try {
+                        if (file.type === 'image/jpeg') {
+                            img = await pdfDoc.embedJpg(imgBytes);
+                        } else {
+                            // Convert to PNG if needed
+                            img = await pdfDoc.embedPng(imgBytes);
+                        }
+                    } catch (e) {
+                        // Try converting via canvas for unsupported formats
+                        const bitmap = await createImageBitmap(await file.arrayBuffer());
+                        const canvas = document.createElement('canvas');
+                        canvas.width = bitmap.width;
+                        canvas.height = bitmap.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(bitmap, 0, 0);
+                        imgBytes = await canvas.convertToBlob({ type: 'image/png' }).then(b => b.arrayBuffer());
+                        img = await pdfDoc.embedPng(imgBytes);
+                    }
+
+                    const page = pdfDoc.addPage([img.width, img.height]);
+                    page.drawImage(img, { x: 0, y: 0, width: img.width, height: img.height });
+                }
+
+                progressText.textContent = '正在生成 PDF...';
+                progressBar.style.width = '90%';
+
+                const pdfBytes = await pdfDoc.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'converted.pdf';
+                a.click();
+                URL.revokeObjectURL(url);
+
+                progressBar.style.width = '100%';
+                progressText.textContent = '转换完成！';
+
+                setTimeout(() => {
+                    progress.classList.add('hidden');
+                    progressBar.style.width = '0%';
+                }, 3000);
+            } catch (err) {
+                console.error('Conversion error:', err);
+                progressText.textContent = '转换失败：' + (err.message || '未知错误');
+                progressBar.style.width = '0%';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // ==================== PDF转图片 ====================
+        let pdfFile = null;
+        let pdfDoc = null;
+        const dropZonePdf = document.getElementById('drop-zone-pdf');
+        const pdfInput = document.getElementById('pdf-input');
+
+        // Drop zone events
+        dropZonePdf.addEventListener('click', () => pdfInput.click());
+        dropZonePdf.addEventListener('dragover', (e) => { e.preventDefault(); dropZonePdf.classList.add('dragover'); });
+        dropZonePdf.addEventListener('dragleave', () => dropZonePdf.classList.remove('dragover'));
+        dropZonePdf.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZonePdf.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files).filter(f => f.type === 'application/pdf');
+            if (files.length) loadPdf(files[0]);
+        });
+        pdfInput.addEventListener('change', (e) => {
+            if (e.target.files.length) loadPdf(e.target.files[0]);
+            e.target.value = '';
+        });
+
+        // Page range radio
+        document.querySelectorAll('input[name="page-range"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                document.getElementById('custom-range').classList.toggle('hidden', e.target.value !== 'custom');
+            });
+        });
+
+        async function loadPdf(file) {
+            pdfFile = file;
+            const arrayBuffer = await file.arrayBuffer();
+            
+            try {
+                pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                document.getElementById('pdf-name').textContent = file.name;
+                document.getElementById('pdf-pages').textContent = `共 ${pdfDoc.numPages} 页`;
+                document.getElementById('pdf-info').classList.remove('hidden');
+            } catch (err) {
+                alert('无法读取此 PDF 文件，请确认文件未损坏。');
+                console.error(err);
+            }
+        }
+
+        function clearPdf() {
+            pdfFile = null;
+            pdfDoc = null;
+            document.getElementById('pdf-info').classList.add('hidden');
+        }
+
+        function parsePageRange(rangeStr, totalPages) {
+            const pages = new Set();
+            const parts = rangeStr.split(',').map(s => s.trim()).filter(Boolean);
+            
+            for (const part of parts) {
+                if (part.includes('-')) {
+                    const [start, end] = part.split('-').map(Number);
+                    if (!isNaN(start) && !isNaN(end)) {
+                        for (let i = Math.max(1, start); i <= Math.min(totalPages, end); i++) {
+                            pages.add(i);
+                        }
+                    }
+                } else {
+                    const num = parseInt(part);
+                    if (!isNaN(num) && num >= 1 && num <= totalPages) {
+                        pages.add(num);
+                    }
+                }
+            }
+            
+            return Array.from(pages).sort((a, b) => a - b);
+        }
+
+        async function convertPdfToImages() {
+            if (!pdfDoc) return;
+
+            const btn = document.getElementById('btn-convert-img');
+            const progress = document.getElementById('pdf-progress');
+            const progressBar = document.getElementById('pdf-progress-bar');
+            const progressText = document.getElementById('pdf-progress-text');
+
+            btn.disabled = true;
+            progress.classList.remove('hidden');
+            progressBar.style.width = '0%';
+
+            try {
+                const rangeType = document.querySelector('input[name="page-range"]:checked').value;
+                let pagesToConvert;
+
+                if (rangeType === 'all') {
+                    pagesToConvert = Array.from({ length: pdfDoc.numPages }, (_, i) => i + 1);
+                } else {
+                    const rangeStr = document.getElementById('page-range-input').value;
+                    pagesToConvert = parsePageRange(rangeStr, pdfDoc.numPages);
+                    if (pagesToConvert.length === 0) {
+                        alert('请输入有效的页码范围');
+                        btn.disabled = false;
+                        progress.classList.add('hidden');
+                        return;
+                    }
+                }
+
+                const total = pagesToConvert.length;
+                const imageBlobs = [];
+
+                for (let idx = 0; idx < total; idx++) {
+                    const pageNum = pagesToConvert[idx];
+                    progressText.textContent = `正在转换第 ${pageNum} 页 (${idx + 1}/${total})...`;
+                    progressBar.style.width = `${((idx) / total) * 100}%`;
+
+                    const page = await pdfDoc.getPage(pageNum);
+                    const viewport = page.getViewport({ scale: 2 });
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+                    
+                    await page.render({ canvasContext: ctx, viewport }).promise;
+                    
+                    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                    imageBlobs.push({ blob, pageNum });
+                }
+
+                progressText.textContent = '正在准备下载...';
+                progressBar.style.width = '90%';
+
+                // Download each image
+                if (imageBlobs.length === 1) {
+                    // Single image - direct download
+                    const url = URL.createObjectURL(imageBlobs[0].blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `page_${imageBlobs[0].pageNum}.png`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                } else {
+                    // Multiple images - download sequentially with small delay
+                    for (const { blob, pageNum } of imageBlobs) {
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `page_${pageNum}.png`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                        await new Promise(r => setTimeout(r, 300));
+                    }
+                }
+
+                progressBar.style.width = '100%';
+                progressText.textContent = `转换完成！共生成 ${total} 张图片`;
+
+                setTimeout(() => {
+                    progress.classList.add('hidden');
+                    progressBar.style.width = '0%';
+                }, 3000);
+            } catch (err) {
+                console.error('Conversion error:', err);
+                progressText.textContent = '转换失败：' + (err.message || '未知错误');
+                progressBar.style.width = '0%';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
