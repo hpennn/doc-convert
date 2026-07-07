@@ -1,0 +1,17 @@
+{
+  "name": "文档格式转换",
+  "short_name": "文档转换",
+  "description": "免费在线文档格式转换工具，支持图片转PDF、PDF转图片，纯浏览器本地处理",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
