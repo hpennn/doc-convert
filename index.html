@@ -83,8 +83,8 @@
     </header>
 
     <!-- Chat Area -->
-    <div id="chatArea" class="flex-1 overflow-y-auto chat-scroll px-4 py-6">
-        <div class="max-w-3xl mx-auto space-y-4" id="chatMessages"></div>
+    <div id="chatArea" class="flex-1 overflow-y-auto chat-scroll">
+        <div class="max-w-3xl mx-auto space-y-4 border border-gray-200 rounded-xl bg-white shadow-sm mb-4 px-4 py-6" id="chatMessages"></div>
     </div>
 
     <!-- Drop Overlay -->
@@ -97,7 +97,7 @@
     </div>
 
     <!-- Input Area -->
-    <footer class="shrink-0 bg-white border-t border-gray-200">
+    <footer class="shrink-0 bg-gray-50 border-t border-gray-200">
         <div class="max-w-3xl mx-auto px-4 py-3">
             <div id="inputZone" class="border-2 border-dashed border-gray-300 rounded-2xl p-4 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/40 transition-all">
                 <div class="flex flex-col items-center gap-2">
@@ -134,7 +134,7 @@
                 <div class="shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
                     <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
                 </div>
-                <div class="bg-white rounded-2xl rounded-tl-sm shadow-sm border border-gray-100 px-4 py-3 max-w-[85%] text-sm text-gray-700 leading-relaxed">${html}</div>`;
+                <div class="bg-white rounded-2xl rounded-tl-sm shadow-sm border border-gray-200 px-4 py-3 max-w-[85%] text-sm text-gray-700 leading-relaxed">${html}</div>`;
             chatMessages.appendChild(div);
             scrollBottom();
             return div;
@@ -144,7 +144,7 @@
             const div = document.createElement('div');
             div.className = 'flex items-start gap-3 justify-end msg-in';
             div.innerHTML = `
-                <div class="bg-blue-500 text-white rounded-2xl rounded-tr-sm shadow-sm px-4 py-3 max-w-[85%] text-sm leading-relaxed">${text}</div>
+                <div class="bg-blue-500 text-white rounded-2xl rounded-tr-sm shadow-sm border border-blue-400/30 px-4 py-3 max-w-[85%] text-sm leading-relaxed">${text}</div>
                 <div class="shrink-0 w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mt-0.5">
                     <svg class="w-4 h-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>`;
@@ -160,7 +160,7 @@
                 <div class="shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mt-0.5">
                     <svg class="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
                 </div>
-                <div class="bg-white rounded-2xl rounded-tl-sm shadow-sm border border-gray-100 px-4 py-3">
+                <div class="bg-white rounded-2xl rounded-tl-sm shadow-sm border border-gray-200 px-4 py-3">
                     <div class="dot-typing"><span></span><span></span><span></span></div>
                 </div>`;
             chatMessages.appendChild(div);
